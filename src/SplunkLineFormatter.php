@@ -20,20 +20,25 @@ class SplunkLineFormatter extends LineFormatter
     protected $quoteReplacement;
 
     /**
-     * @param string $format                     The format of the message
-     * @param string $dateFormat                 The format of the timestamp: one supported by DateTime::format
-     * @param bool   $allowInlineLineBreaks      Whether to allow inline line breaks in log entries
-     * @param bool   $ignoreEmptyContextAndExtra
+     * @param string $format The format of the message
+     * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
+     * @param bool $allowInlineLineBreaks Whether to allow inline line breaks in log entries
+     * @param bool $ignoreEmptyContextAndExtra
+     * @param string $quoteReplacement
      */
-    public function __construct($format = null, $dateFormat = null, $allowInlineLineBreaks = false, $ignoreEmptyContextAndExtra = false,
-    $quoteReplacement = '^')
-    {
-        if($format === null) {
+    public function __construct(
+        $format = null,
+        $dateFormat = null,
+        $allowInlineLineBreaks = false,
+        $ignoreEmptyContextAndExtra = false,
+        $quoteReplacement = '^'
+    ) {
+        if ($format === null) {
             $format = self::SPLUNK_FORMAT;
         }
         // By default we just put the Unix timestamp to save Splunk processing costs;
         // We'll never actually search on this via Splunk, it has its own timestamp data.
-        if($dateFormat === null) {
+        if ($dateFormat === null) {
             $dateFormat = 'U';
         }
         $this->quoteReplacement = $quoteReplacement;
@@ -45,7 +50,7 @@ class SplunkLineFormatter extends LineFormatter
         $this->quoteReplacement = $quoteReplacement;
     }
 
-    protected function jsonEncode($data)
+    protected function jsonEncode($data): string
     {
         return $this->toJson($data, true);
     }
@@ -53,7 +58,7 @@ class SplunkLineFormatter extends LineFormatter
     /**
      * Public so we can run unit tests against it
      */
-    public function publicConvertToString($data)
+    public function publicConvertToString($data): string
     {
         return $this->convertToString($data);
     }
@@ -65,28 +70,24 @@ class SplunkLineFormatter extends LineFormatter
         }
 
         if (is_scalar($data)) {
-            return (string) $data;
+            return (string)$data;
         }
 
         if (is_array($data)) {
-
-            $vals = array();
+            $vals = [];
 
             foreach ($data as $n => $v) {
                 if (null === $v || is_bool($v)) {
                     $v = var_export($v, true);
-                }
-                else if (is_numeric($v)) {
-                    $v = (string) $v;
-                }
-                else if (is_scalar($v)) {
+                } elseif (is_numeric($v)) {
+                    $v = (string)$v;
+                } elseif (is_scalar($v)) {
                     // If this consists of simple characters with no spaces, we don't need quotes.
                     // This saves 2 bytes per n=v pair, which can add up to lots of money.
-                    if (! preg_match("/^[a-z0-9\-_\.]*$/i", $v)) {
+                    if (!preg_match("/^[a-z0-9\-_\.]*$/i", $v)) {
                         $v = '"' . $this->toQuoteSafeString($v) . '"';
                     }
-                }
-                else {
+                } else {
                     $v = '"' . $this->toQuoteSafeString($this->jsonEncode($v)) . '"';
                 }
 
@@ -99,9 +100,8 @@ class SplunkLineFormatter extends LineFormatter
         return $this->jsonEncode($data);
     }
 
-    protected function toQuoteSafeString($string)
+    protected function toQuoteSafeString($string): string
     {
-        return str_replace('"', $this->quoteReplacement, (string) $string);
+        return str_replace('"', $this->quoteReplacement, (string)$string);
     }
-
 }
