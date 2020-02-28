@@ -7,15 +7,20 @@
       "name": "Ross Perkins",
       "email": "ross@vubeology.com",
       "homepage": "http://code.vube.com/"
+    },
+    {
+      "name": "Lee Shepherd",
+      "email": "lee@smugmug.com",
+      "homepage": "https://engineering.smugmug.com/"
     }
   ],
   "require": {
-    "php": ">=5.3.0"
+    "php": ">=7.0"
   },
   "require-dev": {
-    "monolog/monolog": "~1.0",
+    "monolog/monolog": "~2.0",
     "phpunit/phpunit": "~4.0",
-    "satooshi/php-coveralls": "dev-master"
+    "php-coveralls/php-coveralls": "~2.0"
   },
   "autoload": {
     "psr-4": {

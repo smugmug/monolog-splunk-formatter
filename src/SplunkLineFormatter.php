@@ -47,11 +47,7 @@ class SplunkLineFormatter extends LineFormatter
 
     protected function jsonEncode($data)
     {
-        if (version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            return $this->toJson($data, true);
-        }
-
-        return str_replace('\\/', '/', @json_encode($data));
+        return $this->toJson($data, true);
     }
 
     /**
@@ -62,7 +58,7 @@ class SplunkLineFormatter extends LineFormatter
         return $this->convertToString($data);
     }
 
-    protected function convertToString($data)
+    protected function convertToString($data): string
     {
         if (null === $data || is_bool($data)) {
             return var_export($data, true);

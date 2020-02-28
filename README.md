@@ -15,15 +15,17 @@ A Splunk Formatter for Monolog
 
 ## Prerequisites/Requirements
 
-- PHP 5.3.0 or greater
+- PHP 7.0 or greater
 - Composer
+
+Use the 1.x versions for PHP 5.3 / Monolog 1.x compatibility
 
 ## Installation
 
 Installation is possible using Composer
 
 ```
-composer require vube/monolog-splunk-formatter ~1.0
+composer require vube/monolog-splunk-formatter ~2.0
 ```
 
 ## Usage
